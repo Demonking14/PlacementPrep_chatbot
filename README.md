@@ -18,8 +18,15 @@ A conversational AI chatbot built with LangGraph and Streamlit to help students 
 - **InMemorySaver** — conversation checkpointing
 
 ## 🧠 How Memory Works
+This chatbot maintains conversation history across multiple turns using three key concepts:
+Message State with add_messages
+Instead of replacing the message list on every turn, add_messages appends new messages to the existing state — maintaining the full conversation history as [message1, message2, message3, ...] rather than overwriting previous messages.
+Checkpointing with InMemorySaver
+The LangGraph workflow is divided into checkpoints at each node. After every step, the current state is saved as a checkpoint. InMemorySaver stores these checkpoints in RAM, allowing the graph to retrieve and resume any conversation from its last known state.
+Session Isolation with thread_id
+Every conversation is assigned a unique thread_id via the config object. When retrieving checkpoint history, LangGraph uses this ID to fetch only the relevant conversation — preventing any cross-contamination between different users' sessions.
 
-<!-- Write this section yourself — you explained it perfectly already -->
+Production Note: InMemorySaver is ephemeral — history is lost on server restart. For production, replace with SqliteSaver or PostgresSaver for persistent storage.
 
 ## 🚀 How to Run
 
