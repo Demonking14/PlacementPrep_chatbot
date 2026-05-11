@@ -32,7 +32,7 @@ Production Note: InMemorySaver is ephemeral — history is lost on server restar
 
 1. Clone the repo
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Demonking14/PlacementPrep_chatbot.git
 cd placement-prep-assistant
 ```
 
