@@ -18,8 +18,13 @@ if user_input:
     with st.chat_message('user'):
         st.text(user_input)
     
-    response = workflow.invoke({'message' : [HumanMessage(content=user_input)]} , config = CONFIG)["message"][-1].content;
-    st.session_state['msg_history'].append({'role':'ai' , "message": response})
     with st.chat_message('ai'):
-        st.text(response)
+     ai_mesage =    st.write_stream(
+             message_chunk.content for message_chunk, metadata in workflow.stream(
+                {"message":[HumanMessage(content=user_input)]},
+                config=CONFIG,
+                stream_mode="message"
+            )
+        )
+     st.session_state['msg_history'].append({"role":"ai" , "message":ai_mesage})
 
