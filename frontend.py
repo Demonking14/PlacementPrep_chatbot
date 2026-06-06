@@ -47,7 +47,7 @@ if st.sidebar.button("New Chat"):
 
 st.sidebar.header("Message history")
 for thread_id in st.session_state['chat_thread'][::]:
-    if st.sidebar.button(str(thread_id)):
+    if st.sidebar.button(str(thread_id)[:10]):
         st.session_state['thread_id'] = thread_id
         messages = loadChats(threadid=thread_id)
         temp_msg = []
