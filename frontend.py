@@ -1,11 +1,11 @@
-from backend import workflow
+from backend import workflow, db
 from langchain_core.messages import HumanMessage
 import streamlit as st
 import uuid
 
 def generateThread():
     thread_id = uuid.uuid4()
-    return thread_id;
+    return str(thread_id);
 
 def resetMesssage():
      thread_id = generateThread()
@@ -16,6 +16,12 @@ def resetMesssage():
 def add_threads(threadid):
     if threadid not in st.session_state['chat_thread']:
         st.session_state['chat_thread'].append(threadid);     
+        
+def load_all_mongo_thread():
+    collection = db["checkpointing_db.checkpoints"]
+    threads = collection.distinct("thread_id")
+    return[uuid.UUID(t) if isinstance(t, str) else t for t in threads]
+    
      
 def loadChats(threadid):
     return workflow.get_state(config={"configurable":{"thread_id": threadid}}).values.get('message', [])
@@ -26,8 +32,8 @@ if 'thread_id' not in st.session_state:
     st.session_state['thread_id'] = generateThread()
 
 if 'chat_thread' not in st.session_state:
-    st.session_state['chat_thread'] = []
-
+    st.session_state['chat_thread'] = load_all_mongo_thread()
+    
 if 'msg_history' not in st.session_state:
     st.session_state['msg_history'] = []
 
